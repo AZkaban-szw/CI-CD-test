@@ -1,0 +1,19 @@
+name: Docker Build
+on:
+  push:
+    branches: [main, staging, dev]  
+  pull_request:
+    branches: [main, staging, dev]  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Verify required files
+        run: |
+          if [ ! -f "Dockerfile" ]; then echo "Error: Dockerfile missing"; exit 1; fi
+          if [ ! -f "requirements.txt" ]; then echo "Error: requirements.txt missing"; exit 1; fi
+      - name: Build Docker image
+        run: |
+          docker build . --file Dockerfile --tag python-dedupe-app:${{ github.sha }}
