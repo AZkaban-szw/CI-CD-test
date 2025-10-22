@@ -14,3 +14,15 @@ def test_mixed_columns():
     cols = ["id", "name", "id", "name", "name"] 
     expected = ["id", "name", "id.1", "name.1", "name.2"] 
     assert dedupe_header(cols) == expected
+
+# 测试4：忽略大小写的重复列名
+def test_case_insensitive_duplicates():
+    cols = ["id", "ID", "Id", "name", "Name"]
+    expected = ["id", "ID.1", "Id.2", "name", "Name.1"]
+    assert dedupe_header(cols) == expected
+
+# 测试5：区分大小写的重复列名
+def test_case_sensitive_duplicates():
+    cols = ["id", "ID", "Id"]
+    expected = ["id", "ID", "Id"]  # 区分大小写时不视为重复
+    assert dedupe_header(cols, case_sensitive=True) == expected
